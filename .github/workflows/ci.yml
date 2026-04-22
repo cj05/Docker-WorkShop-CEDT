@@ -45,9 +45,14 @@ jobs:
       # TODO(step-6e): tag and push the image as both :latest and :${{ github.sha }}.
       - name: Tag and push
         run: |
-          FULL=${{ secrets.DOCKERHUB_USERNAME }}/$IMAGE_NAME
-          docker push $IMAGE_NAME:${{ github.sha }} $FULL:${{ github.sha }}
-          docker push $IMAGE_NAME:${{ github.sha }} $FULL:latest
-          docker push $FULL:${{ github.sha }}
-          docker push $FULL:latest
-
+          # 1. Define the remote repository name
+          REPO=${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}
+          
+          # 2. Create "aliases" (tags) that point to your local build
+          # This links 'workshop-app' to 'yourusername/workshop-app'
+          docker tag ${{ env.IMAGE_NAME }}:${{ github.sha }} $REPO:${{ github.sha }}
+          docker tag ${{ env.IMAGE_NAME }}:${{ github.sha }} $REPO:latest
+          
+          # 3. Push each tag one by one
+          docker push $REPO:${{ github.sha }}
+          docker push $REPO:latest
