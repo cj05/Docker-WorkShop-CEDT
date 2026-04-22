@@ -50,3 +50,4 @@ jobs:
           docker push $IMAGE_NAME:${{ github.sha }} $FULL:latest
           docker push $FULL:${{ github.sha }}
           docker push $FULL:latest
+
